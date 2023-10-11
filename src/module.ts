@@ -9,7 +9,9 @@ import {
   addImports
 } from '@nuxt/kit'
 import { defu } from 'defu'
-import fs from 'fs'
+// import fs
+import * as fs from 'fs'
+
 // get name and version from package.json
 const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf8'))
 const { name, version } = packageJson
@@ -158,4 +160,4 @@ export default defineNuxtModule<ModuleOptions>({
       })
     })
   }
-})
+}) as any
