@@ -45,6 +45,8 @@
     "@nuxtjs/eslint-config-typescript": "^12.1.0",
     "changelogen": "^0.5.5",
     "eslint": "^8.50.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.1",
     "nuxt": "^3.7.4"
   },
   "repository": "https://github.com/becem-gharbi/nuxt-directus.git"

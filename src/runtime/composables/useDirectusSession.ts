@@ -65,19 +65,18 @@ export default function () {
       process.client && localStorage.setItem(loggedInName, value.toString())
   }
 
-  async function refresh () {
-    const isRefreshOn = useState('directus-refresh-loading', () => false)
+  async function refresh() {
     const user = useState('directus-user')
+    const refreshPromise = useState('directus-refresh-promise')
 
-    if (isRefreshOn.value) {
-      return
+    // if refreshPromise is not null, it means that the refresh is already in progress
+    if (refreshPromise.value) {
+      return (await refreshPromise).value
     }
-
-    isRefreshOn.value = true
 
     const cookie = useRequestHeaders(['cookie']).cookie || ''
 
-    await $fetch
+    refreshPromise.value = $fetch
       .raw<AuthenticationData>('/auth/refresh', {
         baseURL: config.rest.baseUrl,
         method: 'POST',
@@ -89,7 +88,7 @@ export default function () {
           cookie
         }
       })
-      .then((res) => {
+      .then(res => {
         const setCookie = res.headers.get('set-cookie') || ''
         const cookies = splitCookiesString(setCookie)
         for (const cookie of cookies) {
@@ -99,11 +98,12 @@ export default function () {
           _accessToken.set(res._data?.data.access_token)
           _loggedIn.set(true)
         }
-        isRefreshOn.value = false
+        refreshPromise.value = null
         return res
       })
       .catch(async () => {
-        isRefreshOn.value = false
+        refreshPromise.value = null
+
         _accessToken.clear()
         _loggedIn.set(false)
         user.value = null
@@ -111,9 +111,11 @@ export default function () {
           await navigateTo(config.auth.redirect.logout)
         }
       })
+
+    return (await refreshPromise).value
   }
 
-  async function getToken (): Promise<string | null | undefined> {
+  async function getToken(): Promise<string | null | undefined> {
     const accessToken = _accessToken.get()
 
     if (accessToken && isTokenExpired(accessToken)) {
@@ -123,7 +125,7 @@ export default function () {
     return _accessToken.get()
   }
 
-  function isTokenExpired (token: string) {
+  function isTokenExpired(token: string) {
     const decoded = jwtDecode(token) as { exp: number }
     const expires = decoded.exp * 1000 - msRefreshBeforeExpires
     return expires < Date.now()

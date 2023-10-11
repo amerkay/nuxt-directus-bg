@@ -9,7 +9,11 @@ import {
   addImports
 } from '@nuxt/kit'
 import { defu } from 'defu'
-import { name, version } from '../package.json'
+import fs from 'fs'
+// get name and version from package.json
+const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf8'))
+const { name, version } = packageJson
+
 import type { PublicConfig } from './runtime/types'
 
 export interface ModuleOptions extends PublicConfig {}
@@ -49,7 +53,7 @@ export default defineNuxtModule<ModuleOptions>({
     }
   },
 
-  async setup (options, nuxt) {
+  async setup(options, nuxt) {
     if (!options.rest.baseUrl) {
       logger.warn(`[${name}] Please make sure to set Directus baseUrl`)
     }
@@ -143,10 +147,10 @@ export default defineNuxtModule<ModuleOptions>({
       'updateUsers',
       'uploadFiles',
       'withToken',
-      'aggregate' 
+      'aggregate'
     ]
 
-    commands.forEach((name) => {
+    commands.forEach(name => {
       addImports({
         name,
         as: name,
