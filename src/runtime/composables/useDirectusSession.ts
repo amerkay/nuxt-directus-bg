@@ -16,6 +16,7 @@ import {
   useRequestHeaders,
   navigateTo
 } from '#imports'
+import type { CookieSerializeOptions } from 'cookie'
 
 export default function () {
   const event = useRequestEvent()
@@ -24,6 +25,7 @@ export default function () {
   const accessTokenCookieName = config.auth.accessTokenCookieName
   const refreshTokenCookieName = config.auth.refreshTokenCookieName
   const msRefreshBeforeExpires = config.auth.msRefreshBeforeExpires
+  const accessTokenCookieExpiresSeconds = 60 * 60 * 24 * 7 // Directus default is 7d
   const loggedInName = 'directus_logged_in'
 
   const _accessToken = {
@@ -32,20 +34,22 @@ export default function () {
         ? event.context[accessTokenCookieName] ||
           getCookie(event, accessTokenCookieName)
         : useCookie(accessTokenCookieName).value,
+
     set: (value: string) => {
+      const cookieOptions: CookieSerializeOptions = {
+        sameSite: 'lax',
+        secure: true,
+        maxAge: accessTokenCookieExpiresSeconds
+      }
+
       if (process.server) {
         event.context[accessTokenCookieName] = value
-        setCookie(event, accessTokenCookieName, value, {
-          sameSite: 'lax',
-          secure: true
-        })
+        setCookie(event, accessTokenCookieName, value, cookieOptions)
       } else {
-        useCookie(accessTokenCookieName, {
-          sameSite: 'lax',
-          secure: true
-        }).value = value
+        useCookie(accessTokenCookieName, cookieOptions).value = value
       }
     },
+
     clear: () => {
       if (process.server) {
         deleteCookie(event, accessTokenCookieName)

@@ -43,6 +43,7 @@
     "@nuxt/module-builder": "^0.5.2",
     "@nuxt/schema": "^3.7.4",
     "@nuxtjs/eslint-config-typescript": "^12.1.0",
+    "@types/cookie": "^0.5.2",
     "changelogen": "^0.5.5",
     "eslint": "^8.51.0",
     "eslint-config-prettier": "^9.0.0",
