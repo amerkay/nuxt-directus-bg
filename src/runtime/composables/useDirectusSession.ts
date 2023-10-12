@@ -25,7 +25,7 @@ export default function () {
   const accessTokenCookieName = config.auth.accessTokenCookieName
   const refreshTokenCookieName = config.auth.refreshTokenCookieName
   const msRefreshBeforeExpires = config.auth.msRefreshBeforeExpires
-  const accessTokenCookieExpiresSeconds = 60 * 60 * 24 * 7 // Directus default is 7d
+  const accessTokenCookieExpiresSeconds = config.auth.accessTokenCookieExpiresSeconds
   const loggedInName = 'directus_logged_in'
 
   const _accessToken = {
