@@ -49,7 +49,6 @@ export default defineNuxtConfig({
       userFields: ["*"], // Select user fields
       refreshTokenCookieName: "directus_refresh_token",
       accessTokenCookieName: "directus_access_token",
-      accessTokenCookieExpiresSeconds: 60 * 60 * 24 * 7 // Directus default is 7d
       msRefreshBeforeExpires: 3000,
       redirect: {
         login: "/auth/login", // Path to redirect when login is required

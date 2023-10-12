@@ -45,7 +45,6 @@ export default defineNuxtModule<ModuleOptions>({
       enableGlobalAuthMiddleware: false,
       refreshTokenCookieName: 'directus_refresh_token',
       accessTokenCookieName: 'directus_access_token',
-      accessTokenCookieExpiresSeconds: 60 * 60 * 24 * 7, // Directus default is 7d
       redirect: {
         home: '/home',
         login: '/auth/login',
